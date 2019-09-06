@@ -405,7 +405,7 @@ class Tag extends EventEmitter {
      * @memberof Tag
      */
     parseReadMessageResponseValueForAtomic(data) {
-        const { SINT, INT, DINT, REAL, BOOL } = Types;
+        const { SINT, INT, DINT, REAL, BOOL, STRING } = Types;
 
         // Read Tag Value
         /* eslint-disable indent */
@@ -424,6 +424,9 @@ class Tag extends EventEmitter {
                 break;
             case BOOL:
                 this.controller_value = data.readUInt8(2) !== 0;
+                break;
+            case STRING:
+                this.controller_value = data.toString('ascii', 2);
                 break;
             default:
                 throw new Error(
@@ -563,7 +566,7 @@ class Tag extends EventEmitter {
 
     /**
      * Unstages Value Edit by Updating controllerValue
-     * after the Successful Completion of 
+     * after the Successful Completion of
      * a Tag Write
      *
      * @memberof Tag
