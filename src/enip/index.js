@@ -90,8 +90,14 @@ class ENIP extends Socket {
         if (!IP_ADDR) {
             throw new Error("Controller <class> requires IP_ADDR <string>!!!");
         }
+        let ipAddrSplit = IP_ADDR.split(':');
+        let ipAddr = ipAddrSplit[0];
+        let ipAddrPort = EIP_PORT;
+        if (ipAddrSplit.length > 1) {
+            ipAddrPort = parseInt(ipAddrSplit[1], 10);
+        }
         await new Promise((resolve, reject) => {
-            lookup(IP_ADDR, (err, addr) => {
+            lookup(ipAddr, (err, addr) => {
                 if (err) reject(new Error("DNS Lookup failed for IP_ADDR " + IP_ADDR));
 
                 if (!isIPv4(addr)) {
@@ -114,8 +120,8 @@ class ENIP extends Socket {
         await promiseTimeout(
             new Promise(resolve => {
                 super.connect(
-                    EIP_PORT,
-                    IP_ADDR,
+                    ipAddrPort,
+                    ipAddr,
                     () => {
                         this.state.TCP.establishing = false;
                         this.state.TCP.established = true;
